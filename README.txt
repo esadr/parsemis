@@ -9,5 +9,9 @@ To run/compile parts of ParSeMiS different extern libraries are required:
 
 Please add the corresponding .jar files to the lib directory.
 
+Above dependencies are all ready added in lib folder.
+
+Run "ant jar" for generating jar for whole project.
+
 Run "java -jar parsemis-2008-12-01.jar" for usage and see index.html and further 
 from the javadoc directory for documentation.
