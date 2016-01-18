@@ -1,0 +1,39 @@
+digraph G {
+  1 [ label="1 : ROOT:something()#0" ];
+  2 [ label="2 : java.lang.StringBuffer.<init>()#0" ];
+  3 [ label="3 : java.io.FileReader.<init>()#1" ];
+  4 [ label="4 : java.io.BufferedReader.<init>()#1" ];
+  5 [ label="5 : START FOR" ];
+  7 [ label="7 : java.io.BufferedReader.readLine()#0" ];
+  8 [ label="8 : java.lang.StringBuffer.append()#1" ];
+  6 [ label="6 : END FOR" ];
+  9 [ label="9 : START IF" ];
+  11 [ label="11 : java.lang.StringBuffer.length()#0" ];
+  12 [ label="12 : java.lang.StringBuffer.toString()#0" ];
+  13 [ label="13 : System.out.println()#1" ];
+  10 [ label="10 : END IF" ];
+  14 [ label="14 : java.io.BufferedReader.close()#0" ];
+  1 -> 2;
+  2 -> 3;
+  3 -> 4;
+  4 -> 5;
+  5 -> 7;
+  4 -> 7;
+  5 -> 8;
+  2 -> 8;
+  8 -> 6;
+  6 -> 9;
+  9 -> 11;
+  2 -> 11;
+  8 -> 11;
+  9 -> 12;
+  2 -> 12;
+  8 -> 12;
+  11 -> 12;
+  12 -> 13;
+  13 -> 10;
+  10 -> 14;
+  4 -> 14;
+  7 -> 14;
+}
+
