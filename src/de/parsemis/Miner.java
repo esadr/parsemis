@@ -28,15 +28,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import de.parsemis.graph.Graph;
+import de.parsemis.graph.HPGraph;
 import de.parsemis.miner.environment.LocalEnvironment;
 import de.parsemis.miner.environment.Settings;
 import de.parsemis.miner.environment.Statistics;
 import de.parsemis.miner.filter.FragmentFilter;
 import de.parsemis.miner.general.Fragment;
+import de.parsemis.miner.general.IntFrequency;
 
 /**
  * This class is the user friendly shell around the ParSeMiS algorithms.
@@ -155,7 +160,38 @@ public final class Miner {
 			}
 		}
 
-		// stop memoryCheck, if necessary
+
+		// Arbit hack
+		System.out.println("Hack...");
+		Set<Fragment<NodeType, EdgeType>> retrn = new HashSet<Fragment<NodeType, EdgeType>>();
+		int max = 0;
+		for (final Iterator<Fragment<NodeType, EdgeType>> fit = ret
+				.iterator(); fit.hasNext();) {
+			final Fragment<NodeType, EdgeType> ack = fit.next();
+			int freq = ((IntFrequency)ack.frequency()).intValue();
+			final HPGraph<NodeType, EdgeType> graph = ack.toGraph()
+					.toHPGraph();
+			if(graph.getEdgeCount() * freq > max){
+				max = graph.getEdgeCount() * freq;
+				for (final Iterator<Fragment<NodeType, EdgeType>> f = retrn
+						.iterator(); f.hasNext();){
+					final Fragment<NodeType, EdgeType> a = f.next();
+					int fr = ((IntFrequency)a.frequency()).intValue();
+					final HPGraph<NodeType, EdgeType> g = a.toGraph()
+							.toHPGraph();
+					if(g.getEdgeCount() * fr < 0 * max){
+						f.remove();
+					}
+				}
+				// retrn.clear();
+				retrn.add(ack);
+				continue;
+			}
+		}
+		ret = retrn;
+		//end hack
+
+			// stop memoryCheck, if necessary
 		if (t != null) {
 			t.interrupt();
 		}
@@ -172,7 +208,10 @@ public final class Miner {
 			} else {
 				try {
 					in = new FileInputStream(settings.inputFileName);
+					System.out.println("size is"  + in.available());
+
 					if (settings.inputFileName.endsWith(".gz")) {
+						System.out.println("I am gz string");
 						in = new GZIPInputStream(in);
 					}
 				} catch (final FileNotFoundException ex) {
@@ -189,6 +228,8 @@ public final class Miner {
 		try {
 			final Collection<Graph<NodeType, EdgeType>> ret = settings.parser
 					.parse(in, settings.factory);
+			System.out.println("graphs size " + ret.size());
+
 			if (settings.minFreq == null) {
 				for (final Graph<NodeType, EdgeType> graph : ret) {
 					if (settings.minFreq == null) {
