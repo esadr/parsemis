@@ -67,6 +67,13 @@ public final class Miner {
 	}
 
 	/**
+	 *
+	 */
+	public static void startParsemis(String args[]) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+		run(args);
+	}
+
+	/**
 	 * starts a separate thread that regularly checks the memory consumption of
 	 * the whole program
 	 * 
